@@ -1,0 +1,267 @@
+<!--- Begin styling code. --->
+<style type="text/css">
+/* Whole document: */
+body{
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 12pt;
+}
+h1.title {
+  font-size: 38px;
+  text-align: center;
+}
+h4.author {
+  font-size: 18px;
+  text-align: center;
+}
+h4.date {
+  font-size: 18px;
+  text-align: center;
+}
+</style>
+<!--- End styling code. --->
+
+---
+title: "Project 1: Data Exploration and Visualization"
+author: "Harper Zhu, in collaboration with Siyue Zhu"
+date: "Due: 10/26/2020 at the start of class"
+output: html_document
+code_folding: hide
+---
+\n
+*As the popularity of board game has been rising up in the recent decades, it became one of the necessary items for friends' gatherings. As the fun and happiness from playing board games together is irreplaceable, some people felted tempted to invite more to play with them. However, there might be some implicit concerns about if the the more the merrier ringing true in this case. That is, some people may ask, what is the number of maximum players most commonly seen on all board games?*
+\n
+
+
+```{r echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#Code for the first graph
+
+library(dplyr)
+library(ggplot2)
+#read the csv data from an online csv file
+board_game_original<- read.csv("https://raw.githubusercontent.com/bryandmartin/STAT302/master/docs/Projects/project1_bgdataviz/board_game_raw.csv")
+#set board_game as a csv file and filter out games that are earlier than 1950 and have less than 25 ratings.
+board_game <- as.data.frame.matrix(board_game_original)
+filtered_data <- board_game %>%
+                filter(yearpublished >= 1950, users_rated >= 25)
+
+#Draw a histogram to show the distribution of maximum number of players
+maxplayers_graph<- ggplot(data=filtered_data, aes(x =maxplayers)) + 
+        #set the histogram bar as light blue and fill it with sky blue
+        geom_histogram(color="light blue",fill="sky blue") + 
+        #label each bar with the number of counts
+        stat_bin(binwidth=1, geom="text", aes(label=..count..), vjust=-1.5) +
+        #set the x scale to from 1 to 20
+        xlim(1,20) + 
+        #set the y scale to  from 0 to 80000
+        ylim(0,8000) + 
+        #set the theme to black and white
+        theme_bw() + 
+        #set the title of the graph
+        ggtitle("The distribution of maximum number of players in board games")+ 
+        #center the title of the graph
+        theme(plot.title = element_text(hjust = 0.5)) +
+        #set the caption of x axis
+        xlab("the maximum number of players") +
+        #set the caption of y axis
+        ylab("count")
+maxplayers_graph
+
+```
+&nbsp;
+\n
+
+*This is a bar plot with maximum number of players as the x variable and the count of the board games as the y variable. The number of maximum players most commonly seen on all board games is 3 and 1, and generally decrease in frequency as the maximum number of players became larger than 7. Therefore, the board games in recent years are relatively small-scale. It is interesting that the majority of the board games are designed to one person or small amount of people, since board games are seem to be designed for party such that many people can join at the same time as a traditional point of view.*
+
+*Sometimes, not all friends and families are available. But the games that people played together often has an intrinsic imprints on people's preference to board games, and oftentimes make the players addicted to one type of game only. A common concern with this persistence is board games that work well in a small group setting might not work well in large group settings, and vice verse, which might expose people to a sense of frustration when switching settings. But is this really true that games that can be played with a larger number of people will not work well with relatively small number of people? In another words,is there really a correlation between the maximum players and smaller players?*
+\n
+
+```{r echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#Code for the second graph
+
+#Draw the graph with minplayers as the x variable and maxplayers as the y variable
+minplayers_maxplayers_graph <- ggplot(data = filtered_data, aes(x = minplayers, y = maxplayers, group = minplayers, color = minplayers, na.rm = TRUE)) + 
+        #Draw the boxplot
+        geom_boxplot() +
+        #Change the limit for the y axis
+        ylim(0, 50) +
+        #set the theme to black and white
+        theme_bw() +
+        #Add a title to the graph
+        ggtitle("The correlation between minimum players and the maximum number of players") +
+        #Adjust the tile
+        theme(plot.title = element_text(hjust = 0.5)) +
+        #Add the caption for x axis
+        xlab("the minimum number of player") +
+        #Add the caption for y axis
+        ylab("the maximum number of player")
+minplayers_maxplayers_graph
+
+```
+
+
+\n
+&nbsp;
+*We can see from the graph that the larger the minimum number of players the game require, generally, the median of the maximum player also increases. Also, the range from the first quantile to the third quantile also increases with the number of minimum players increase. We can conclude that the minimum number of player and maximum of player has a positive correlation, which supports our previous guessing and we can say that board games can be divided to different sizes associating with different group size.*
+
+*Given the popularity of board games, it is natural for people to be curious when did all those board games published. *
+
+\n
+
+```{r echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#Code for the third graph
+
+#Draw the graph with filtered_data as the variable 
+yearpublished_graph <- ggplot(data = filtered_data, aes(yearpublished)) + 
+        #Draw the histogram 
+        geom_histogram(binwidth=0.5, color = "white", fill="sky blue") + 
+        #Change the theme for the graph
+        theme_bw() +
+        #Add a title to the graph
+        ggtitle("The distribution of publication year of board games") +
+        #Adjust the tile
+        theme(plot.title = element_text(hjust = 0.5)) +
+        #Add the label for x axis
+        xlab("year on which board games were published") +
+        #Add the label for y axis
+        ylab("count")
+yearpublished_graph
+
+```
+
+\n
+&nbsp;
+*It seems like board games became more and more popular, and the number of new board games are created with an increasing speed. Especially, the number of publication increased sharply especially after 2000. However, after 2015, the number decreases, which does not consistent with our expectation. I think this abnormal decrease is interesting and we can do further research on this topic. One potential reason I can think for now is there might be something wrong with our data set, we may lose some data after year 2015. Another reason might be young people are not interested in playing board games, they may prefer to play electronics instead of board games.*
+
+*As the number of board games published each years before 2015 are increasing, some people expect there to be an sense of competition within all publishers to increase their sales. One way of doing that is to increase the complexity of the game to keep people on the hook. Is this really true that the year published affects the average complexity of the game?*
+\n
+```{r echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#Code for the fourth graph
+
+#Draw the graph with maxplaytime as the x variable and average_complexity as the y              variable
+maxplaytime_average_complexity_graph <- ggplot(data = filtered_data, aes(x = yearpublished, y = average_complexity)) +
+            #Draw the point plot
+            geom_point(size = 0.1) + 
+            #Add a trend line for the graph
+            geom_smooth(color="blue", size=2) +
+            #ylim(0, 10000) +
+            # Change the theme for the graph
+            theme_bw() +
+            #Add a title to the graph
+            ggtitle("The correlation between the year game was published and average complexity") +
+            #Adjust the tile
+            theme(plot.title = element_text(hjust = 0.5)) +
+            #Add the label for x axis
+            xlab("the year that the game was published") +
+            #Add the label for y axis
+            ylab("the average complexities of board games")
+maxplaytime_average_complexity_graph
+
+```
+
+\n
+&nbsp;
+*The trend of the average complexity increase then decrease with time goes on. We can see the average complexity increases before 1980 and decreases after 1980, which reaches a peak at 1980. This does not consistent with our expectation that the average complexity increases with the number of publication increases. Board games designers might realized that games with relative low average complexity are more popular than games with high average complexity. Designers are willing to create board games with lower complexity since players are intended to easier games.*
+
+*On the other hand, leaving alone the effect of publication date, many board game lovers are thrilled to look for games with higher level of average complexity. Here, we can divide up the games into categories and ask What is the top 15 categories of board games with the highest level of average complexity.*
+\n
+
+```{r echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#Code for the fifth graph
+
+#tidy up the column of mechanic and category with cSplit function
+library(splitstackshape)
+board_game_tidy <- cSplit(board_game,splitCols=c("mechanic","category"), sep = ",", direction = "long")
+
+#use piping to isolate all the category and average complexity from board_game_tidy under conditions
+library(dplyr)
+new_category_complexity <- board_game_tidy %>% 
+            filter(average_complexity > 0, yearpublished >= 1950, users_rated >= 25) %>%
+            select(category, average_complexity) %>%
+            group_by(category)
+#eliminate all the NA in new_category_complexity
+new_category_complexity <- na.omit(new_category_complexity) 
+#use piping to takes the mean of average complexity from rows with identical category and arrange category in descending order of mean complexity
+new_category_complexity <- new_category_complexity %>% 
+                           group_by(category) %>%
+                           mutate(my_average = mean(average_complexity)) %>%
+                           select(-average_complexity) %>%
+                           distinct()
+#take the top 15 category with the highest mean complexity from 
+top15_average <- new_category_complexity %>% 
+                arrange(desc(my_average)) %>%
+                head(15)
+#Plot the relationship between the top 15 category with the highest level of average complexity
+#create a bar graph
+category_complexity_graph <- ggplot(data=top15_average, aes(x = reorder(category, -my_average), y = my_average, na.rm = TRUE)) + 
+        geom_bar(stat = "identity",position = 'dodge', na.rm = TRUE, color="white",fill="sky blue") + 
+        #set the scale of y-axis to a range of 0 to 3.5
+        ylim(0,3.5) + 
+        #set the break unit of the y-axis to be 0.5 to show smaller difference
+        scale_y_continuous(breaks=seq(0, 3.5, 0.5)) + 
+        # label the values in the top of bars
+        geom_text(aes(label=round(my_average, digits = 2)), position=position_dodge(width=0.005), vjust = -0.05, hjust=0.5) + 
+        #set the background to be black and white
+        theme_bw() +
+        #set the title of the graph
+        ggtitle("Which category of board games has the highest level of average complexity") + 
+        #set the caption of the x axis
+        xlab("category of board games") + 
+        #set the caption of the y axis
+        ylab("average complexity of the board game") + 
+        #set the size and angle of the categorical variable in x axis 
+        theme(axis.text.x = element_text(size=10,angle = 45)) + 
+        #center the title of the graph
+        theme(plot.title = element_text(hjust = 0.5)) 
+category_complexity_graph
+
+```
+
+\n
+&nbsp;
+*The top 15 categories of board games with the highest level of average complexity is "Korean War", "Vietname War", "Book", "World Bank II", "American Civil War", "Pike and shot","Age of Reason", "Wargame", "Trains", "Civil War", "Modern Warfare", "Civilization", "Industry/Manufacturing", "Napoleonic", "Political". "Koren War"is the category that has the highest average complexity among all board games.The winner in this race was "Korean War", which has the highest average complexity. We can see that there are many topics related to war among the top 15 categories. It is reasonable to conclude that games with war as the topic are relatively intense and violent than other topics.*
+
+*While some fans might be excited about the increase of average complexity, others are worried about the increase of average complexities can have a negative impact on the average rating of the board games. *
+
+\n
+```{r echo = FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+#Code for the sixth graph
+
+#filter out datapoints whose average_complexity=0 and extract all board games with the non-zero average_complexity
+board_game_without_0 <- filtered_data %>%
+        select(average_complexity,average_rating) %>%
+        filter(average_complexity > 0)
+#Plot out the relationship between the average complexity and average ratings
+#set average_complexity as as x and average_rating as y
+rating_complexity_graph<- ggplot(data=board_game_without_0, aes(x = average_complexity, y = average_rating)) + 
+        #use point graphs of size 0.1
+        geom_point(size=0.1) + 
+        #Add a trendline of size 2 and color blue
+        geom_smooth(color="blue", size=2, method = "gam", formula = y ~ s(x, bs = "cs")) +
+        #set the title of the graph
+        ggtitle("The relationship between the average complexity and the average rating") +
+        #set the title of the x axis
+        xlab("average complexity of the board game") +
+        #set the title of the y axis
+        ylab("average rating of the board game") +
+        #center the title of the graph
+        theme(plot.title = element_text(hjust = 0.5)) + 
+        #set the theme as black and white
+        theme_bw()
+rating_complexity_graph
+
+```
+
+
+\n
+&nbsp;
+*The average complexities of the board game do not have a negative impact on the average rating of the board games. In fact, the graph shows that there is a positive correlation between average complexity and average rating.*
+
+*According to board games, there are many intuitive conclusion such as minimum players and maximum players have the positive correlation. However, there also exist counter-intuitive facts. For example, the number of publication is not always increasing, many boards are designed for a small of people, and the higher average complexity does lead to higher rating. It is interesting to dig deep into data to find out these fun facts.*
+\n
+
+
+# Appendix: All code for this report
+
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+
+```

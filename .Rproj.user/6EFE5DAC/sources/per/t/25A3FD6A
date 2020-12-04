@@ -1,0 +1,32 @@
+{
+    "id": "25A3FD6A",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1603152927527.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "expression": "board_game",
+        "caption": "board_game",
+        "totalObservations": "90400",
+        "displayedObservations": "90400",
+        "variables": "15",
+        "cacheKey": "575AC36D",
+        "object": "board_game",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=board_game&cache_key=575AC36D&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 140534003418080,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1603152927527,
+    "read_only": false,
+    "read_only_alternatives": []
+}

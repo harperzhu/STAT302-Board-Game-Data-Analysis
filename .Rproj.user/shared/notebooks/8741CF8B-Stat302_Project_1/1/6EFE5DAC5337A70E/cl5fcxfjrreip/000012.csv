@@ -1,0 +1,4 @@
+"0","library(splitstackshape)"
+"0","mechanic <- board_game$mechanic"
+"0","category <- board_game$category"
+"0","cSplit(board_game,splitCols = c(mechanic, category),sep = "","", direction = wide)"

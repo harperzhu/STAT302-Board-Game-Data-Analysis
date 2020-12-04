@@ -1,0 +1,12 @@
+"0","library(dplyr)"
+"0","library(ggplot2)"
+"0","?ggplot"
+"0","board_game_original<- read.csv(""https://raw.githubusercontent.com/bryandmartin/STAT302/master/docs/Projects/project1_bgdataviz/board_game_raw.csv"")"
+"0","board_game <- as.data.frame.matrix(board_game_original)"
+"0","#Question: what is the correlation between average rating and playing time among all data"
+"0","average_rating <- board_game%>%filter(yearpublished >= 1950, users_rated >= 25 )%>%select(average_rating)"
+"0","playingtime <- board_game$playingtime"
+"0","playingtime_rating <- board_game%>%group_by(average_rating)%>%select(playingtime)%>%arrange(desc(average_rating))"
+"2","Adding missing grouping variables: `average_rating`
+"
+"0","playingtime_rating"

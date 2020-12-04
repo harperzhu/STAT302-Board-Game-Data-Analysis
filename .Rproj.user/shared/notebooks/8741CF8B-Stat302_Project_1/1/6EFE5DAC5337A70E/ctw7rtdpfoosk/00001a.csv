@@ -1,0 +1,1 @@
+"0","ggplot(data=playingtime_rating, Mapping = aes(x = board_game$playingtime, y = board_game$average_rating) + geom_density())"
